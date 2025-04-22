@@ -1,0 +1,49 @@
+rules:
+  # 一時ファイル・キャッシュの除外
+  - name: "Ignore temporary and cache files"
+    pattern: 
+      - "*.pyc"
+      - "__pycache__/*"
+      - "*.swp"
+      - ".DS_Store"
+    type: ignore
+
+  # バックアップファイルの管理
+  - name: "Manage backup files"
+    pattern: "user_*.csv"
+    type: track
+    comment: "AOJ提出記録のバックアップファイル"
+
+  # 出力ファイルの管理
+  - name: "Manage output files"
+    pattern:
+      - "scores_*.tsv"
+      - "downloads/*.py"
+    type: track
+    comment: "プログラムが生成する出力ファイル"
+
+  # 設定ファイルの管理
+  - name: "Track configuration files"
+    pattern:
+      - "user.csv"
+      - "prob.csv"
+    type: track
+    critical: true
+    comment: "必須の設定ファイル"
+
+  # ソースコードの管理
+  - name: "Track source files"
+    pattern:
+      - "*.py"
+      - "!download_submissions_test.py"
+    type: track
+    critical: true
+    comment: "Pythonソースコード（テストファイルを除く）"
+
+  # ドキュメントの管理
+  - name: "Track documentation"
+    pattern:
+      - "*.md"
+      - "LICENSE"
+    type: track
+    comment: "ドキュメントファイル"

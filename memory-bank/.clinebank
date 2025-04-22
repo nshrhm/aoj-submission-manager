@@ -1,0 +1,82 @@
+contexts:
+  aoj:
+    description: "Aizu Online Judge関連の開発コンテキスト"
+    files:
+      - check_submission.py    # 提出記録の取得・更新
+      - export_excel.py        # Excel形式の出力
+      - download_all_submissions.py  # ソースコードのダウンロード
+
+  config:
+    description: "設定ファイル関連のコンテキスト"
+    files:
+      - prob.csv              # 問題定義
+      - user.csv              # ユーザー情報
+      - .clinerules          # Clineルール
+
+  docs:
+    description: "ドキュメント関連のコンテキスト"
+    files:
+      - README.md
+      - AIZU_ONLINE_JUDGE.md
+
+snippets:
+  api:
+    description: "AOJ API関連のコードスニペット"
+    content: |
+      # SSL警告を抑制
+      urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+      
+      # AOJ APIのエンドポイント
+      ENDPOINT = 'https://judgeapi.u-aizu.ac.jp'
+      URI = '/submission_records'
+      
+      def get_submission_info(user_id: str, prob_id: str) -> dict:
+          """提出情報を取得"""
+          url = f"{ENDPOINT}{URI}/users/{user_id}/problems/{prob_id}"
+          try:
+              response = requests.get(url, verify=False, timeout=10)
+              if response.status_code == 200:
+                  return response.json()
+          except Exception as e:
+              print(f"エラー: {prob_id}の取得中にエラー - {e}")
+          return {}
+
+  file_ops:
+    description: "ファイル操作関連のコードスニペット"
+    content: |
+      def backup_file(filename: str) -> str:
+          """ファイルのバックアップを作成"""
+          date_str = datetime.now().strftime("%Y%m%d")
+          n = 1
+          while True:
+              backup = f"{filename}_{date_str}_{n:03d}"
+              if not os.path.exists(backup):
+                  break
+              n += 1
+          shutil.copy2(filename, backup)
+          return backup
+
+  datetime_utils:
+    description: "日時処理関連のコードスニペット"
+    content: |
+      def format_timestamp(ms: int) -> str:
+          """UNIXタイムスタンプを読みやすい形式に変換"""
+          try:
+              dt = datetime.fromtimestamp(int(ms)/1000)
+              return dt.strftime('%Y年%m月%d日%H時%M分%S秒')
+          except (ValueError, TypeError, OSError):
+              return "未提出"
+
+  csv_utils:
+    description: "CSV処理関連のコードスニペット"
+    content: |
+      def load_csv_data(filename: str) -> list:
+          """CSVファイルを読み込む"""
+          with open(filename, 'r', newline='') as f:
+              return list(csv.reader(f))
+
+      def save_csv_data(filename: str, data: list) -> None:
+          """データをCSVファイルに保存"""
+          with open(filename, 'w', newline='') as f:
+              writer = csv.writer(f)
+              writer.writerows(data)

@@ -1,0 +1,33 @@
+# 機密情報ファイル
+user.csv
+user_*.csv    # バックアップファイル
+scores_*.tsv  # 成績レポート
+
+# 提出プログラム
+downloads/
+downloads/*.py
+
+# Cline関連
+!memory-bank/
+!memory-bank/.clinebank
+
+# Python関連
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+eggs/
+*.egg-info/
+
+# エディタ・OS関連
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
