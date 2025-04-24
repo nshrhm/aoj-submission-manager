@@ -8,7 +8,7 @@
 このプログラムは、user.csvからスコアと提出日時を読み取り、
 Excel用のタブ区切りTSVファイルとして出力します。
 各行は「学籍番号 氏名 問題1スコア 問題1提出日時 問題2スコア...」という形式です。
-日時は「2025年4月22日14時23分45秒」のような読みやすい形式で出力されます。
+日時は「2025/4/22 14:23:45」のような読みやすい形式で出力されます。
 """
 
 import csv
@@ -20,11 +20,11 @@ def convert_timestamp(ms: int) -> str:
     UNIXタイムスタンプ（ミリ秒）を読みやすい日時文字列に変換
 
     @param ms UNIXタイムスタンプ（ミリ秒）
-    @return 「YYYY年MM月DD日HH時MM分SS秒」形式の文字列
+    @return 「YYYY/MM/DD HH:MM:SS」形式の文字列
     """
     try:
         dt = datetime.fromtimestamp(int(ms)/1000)
-        return dt.strftime('%Y年%m月%d日%H時%M分%S秒')
+        return dt.strftime('%Y/%m/%d %H:%M:%S')
     except (ValueError, TypeError, OSError):
         return "未提出"
 
