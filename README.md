@@ -80,6 +80,20 @@ python3 export_excel.py -i user.csv -p prob.csv
 - 日時形式：`YYYY年MM月DD日HH時MM分SS秒`
 - Excelで開くと自動的に表形式で表示
 
+### 4. ランキング集計（generate_rankings.py）
+
+```bash
+# ランキングを生成
+python3 generate_rankings.py
+```
+
+- 総合ランキングおよび問題ごとのランキングをTSVファイルとして出力
+- 総合ランキング：`rankings/total_ranking_YYYYMMDD.tsv`
+  - 同一得点の学生には同一順位を割り当て
+- 問題ごとのランキング：`rankings/ITP1_1_A_ranking_YYYYMMDD.tsv`など
+  - 提出日時順にランキング
+- デバッグログ：`rankings/debug_log_total_ranking.txt`
+
 ## ファイル構成
 
 - `user.csv`：学生情報と提出記録（※個人情報を含むため要管理）
@@ -91,6 +105,7 @@ python3 export_excel.py -i user.csv -p prob.csv
 - `check_submission.py`：提出状況の確認・更新
 - `download_all_submissions.py`：ソースコードのダウンロード
 - `export_excel.py`：Excel用レポート出力
+- `generate_rankings.py`：ランキング集計とTSV出力
 - `users_sample.csv`：user.csvのサンプル
 
 ## 利用上の注意

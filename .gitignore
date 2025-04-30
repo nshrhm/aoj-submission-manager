@@ -2,6 +2,7 @@
 user.csv
 user_*.csv    # バックアップファイル
 scores_*.tsv  # 成績レポート
+rankings/     # ランキングデータ
 
 # 提出プログラム
 downloads/
