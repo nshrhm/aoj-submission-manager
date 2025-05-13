@@ -44,6 +44,16 @@ python3 check_submission.py --debug
 - 実行時に自動でバックアップ（`user_YYYYMMDD_NNN.csv`）を作成
 - APIから各学生の最新の提出状況を取得
 - スコア・提出日時・judgeIdを記録
+- 更新情報を問題ID順に表示
+  - 各問題IDごとに更新があった学籍番号を一覧表示
+  - 例：
+    ```
+    ITP1_3_A
+    dummy001, dummy002, dummy003
+
+    ITP1_3_B
+    dummy001, dummy002
+    ```
 - `--init`：全データを初期状態にリセット
 - `--clean`：データ形式の正規化（不正な値の補正）
 - `--debug`：処理の詳細を表示
