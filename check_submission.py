@@ -218,8 +218,10 @@ def main():
         probs = next(csv.reader(f))
 
     updated = []
+    problem_updates = {}  # 問題IDごとの更新情報を記録
     for row in rows:
-        print(f"{row[0]}\t{row[1]}\t{row[2]}\t{row[3]}", end="")
+        student_id = row[0]  # 学籍番号
+        print(f"{student_id}\t{row[1]}\t{row[2]}\t{row[3]}", end="")
         uid = row[3]
         new_row = row[:4]  # 基本情報
 
@@ -259,6 +261,9 @@ def main():
                 (max_score == cur_score_int and max_date > cur_date_int)):
                 new_row.extend([str(max_score), str(max_date), str(max_jid)])
                 print(f"\t{max_score}({max_date},{max_jid})", end="")
+                if pid not in problem_updates:
+                    problem_updates[pid] = []
+                problem_updates[pid].append(student_id)
             else:
                 # 現在の値を保持
                 new_row.extend([str(cur_score_int), str(cur_date_int), str(cur_jid_int)])
@@ -272,6 +277,15 @@ def main():
         writer = csv.writer(f)
         writer.writerows(updated)
     print("user.csvを更新しました。")
+
+    # 更新情報の表示
+    if problem_updates:
+        print("\n更新があった提出:")
+        for pid in sorted(problem_updates.keys()):
+            print(f"\n{pid}")
+            print(", ".join(sorted(problem_updates[pid])))
+    else:
+        print("\n提出の更新はありませんでした。")
 
 if __name__ == "__main__":
     main()
