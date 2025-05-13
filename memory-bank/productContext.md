@@ -29,6 +29,15 @@ python3 check_submission.py --debug
 - 自動バックアップによるデータ保護
 - 不正値の自動補正機能
 
+#### 表示形式
+- 更新情報を問題ID順にソート
+- 各問題IDごとに更新があった学籍番号を一覧表示
+- 例：
+  ```
+  ITP1_3_A
+  dummy001, dummy002, dummy003
+  ```
+
 ### 2. 提出プログラム管理（download_all_submissions.py）
 
 #### 機能概要
