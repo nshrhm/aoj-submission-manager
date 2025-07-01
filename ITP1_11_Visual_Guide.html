@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サイコロシリーズ (ITP1_11_A-D) 統合ビジュアル解説</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background-color: #f9fafb;
+    }
+
+    /* Visual 1 specific styles */
+    .dice-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 50px);
+      grid-template-rows: repeat(3, 50px);
+      gap: 2px;
+    }
+
+    .dice-face {
+      width: 50px;
+      height: 50px;
+      border: 1px solid #9ca3af;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      background-color: white;
+      flex-direction: column;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .face-1 {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .face-2 {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .face-3 {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .face-4 {
+      grid-column: 3;
+      grid-row: 2;
+    }
+
+    .face-5 {
+      grid-column: 4;
+      grid-row: 2;
+    }
+
+    .face-6 {
+      grid-column: 2;
+      grid-row: 3;
+    }
+
+    /* Common styles for all visuals */
+    .diagram-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1.5rem;
+      background-color: #f3f4f6;
+      border-radius: 0.75rem;
+    }
+
+    .movement-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .flow-chart-item {
+      text-align: center;
+      padding: 1rem;
+      border: 2px solid #d1d5db;
+      border-radius: 0.5rem;
+      background-color: white;
+      min-width: 150px;
+    }
+
+    .flow-arrow {
+      font-size: 2rem;
+      color: #6b7280;
+      align-self: center;
+      margin: 0.5rem 0;
+    }
+
+    code.inline-code {
+      background-color: #e5e7eb;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    pre code {
+      background-color: transparent !important;
+      padding: 0;
+      border-radius: 0;
+    }
+
+    /* Section dividers */
+    .section-divider {
+      border-top: 4px solid #e5e7eb;
+      margin: 3rem 0;
+      padding-top: 3rem;
+    }
+
+    /* Navigation */
+    .nav-container {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 10;
+      border-bottom: 2px solid #e5e7eb;
+      margin-bottom: 2rem;
+    }
+
+    .nav-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      margin: 0.25rem;
+      background-color: #f3f4f6;
+      color: #374151;
+      text-decoration: none;
+      border-radius: 0.375rem;
+      transition: all 0.2s;
+    }
+
+    .nav-link:hover {
+      background-color: #d1d5db;
+    }
+  </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+  <!-- Navigation -->
+  <div class="nav-container">
+    <div class="max-w-5xl mx-auto p-4">
+      <h1 class="text-2xl font-bold text-gray-800 mb-4">サイコロシリーズ (ITP1_11_A-D) 統合ビジュアル解説</h1>
+      <nav class="flex flex-wrap">
+        <a href="#visual1" class="nav-link">サイコロI (回転の仕組み)</a>
+        <a href="#visual2" class="nav-link">サイコロII (状態探索)</a>
+        <a href="#visual3" class="nav-link">サイコロIII (同一性判定)</a>
+        <a href="#visual4" class="nav-link">サイコロIV (複数比較)</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Visual 1: サイコロI -->
+  <div id="visual1" class="max-w-5xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg mb-8">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 border-b pb-2">サイコロI (ITP1_11_A) サイコロの回転の仕組み</h1>
+    <p class="text-gray-700 mb-6">
+      このプログラムは、サイコロを指定された方向に回転させるシミュレーションです。サイコロの各面がどのように移動するかを理解するため、視覚的に解説します。
+    </p>
+
+    <!-- Section 1: Dice Representation -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">1. サイコロの表現方法</h2>
+      <p class="mb-4">
+        このプログラムでは、サイコロを「展開図」の形で表現しています。立体のサイコロを平面に展開したもので、実際の物理的なサイコロと対応しています。
+      </p>
+      <div class="diagram-container">
+        <div>
+          <h3 class="font-bold text-center mb-2">サイコロの展開図</h3>
+          <div class="dice-grid mx-auto">
+            <div class="dice-face face-1 bg-blue-100">1<br><span class="text-xs">(上面)</span></div>
+            <div class="dice-face face-2 bg-green-100">2<br><span class="text-xs">(左面)</span></div>
+            <div class="dice-face face-3 bg-yellow-100">3<br><span class="text-xs">(正面)</span></div>
+            <div class="dice-face face-4 bg-red-100">4<br><span class="text-xs">(右面)</span></div>
+            <div class="dice-face face-5 bg-purple-100">5<br><span class="text-xs">(背面)</span></div>
+            <div class="dice-face face-6 bg-gray-100">6<br><span class="text-xs">(底面)</span></div>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-bold text-center mb-2">立体のサイコロ</h3>
+          <div class="w-full flex justify-center">
+            <svg width="180" height="150" viewBox="0 0 100 100">
+              <path d="M20 30 L50 10 L80 30 L80 70 L50 90 L20 70 Z" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" />
+              <path d="M50 10 L50 50" fill="none" stroke="#f59e0b" stroke-width="1" />
+              <path d="M20 70 L50 50" fill="none" stroke="#f59e0b" stroke-width="1" />
+              <path d="M80 70 L50 50" fill="none" stroke="#f59e0b" stroke-width="1" />
+              <text x="45" y="25" font-size="10" font-weight="bold" text-anchor="middle">1</text>
+              <text x="50" y="72" font-size="10" font-weight="bold" text-anchor="middle">3</text>
+              <text x="72" y="55" font-size="10" font-weight="bold" text-anchor="middle"
+                transform="rotate(30 70,55)">4</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Rolling Movements -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">2. サイコロの回転操作</h2>
+      <p class="mb-6">
+        プログラムでは、4つの基本的な回転操作を定義しています。これらの回転により、サイコロの各面が別の位置に移動します。
+      </p>
+
+      <!-- North Roll -->
+      <div class="mb-6">
+        <h3 class="text-lg font-bold text-gray-600 mb-3">北へ回転 (N): 手前に転がす</h3>
+        <div class="movement-container">
+          <div class="dice-grid">
+            <div class="dice-face face-1 bg-blue-100">1</div>
+            <div class="dice-face face-2 bg-green-100">2</div>
+            <div class="dice-face face-3 bg-yellow-100">3</div>
+            <div class="dice-face face-4 bg-red-100">4</div>
+            <div class="dice-face face-5 bg-purple-100">5</div>
+            <div class="dice-face face-6 bg-gray-100">6</div>
+          </div>
+          <div class="text-2xl">→</div>
+          <div class="dice-grid">
+            <div class="dice-face face-1 bg-yellow-100">3</div>
+            <div class="dice-face face-2 bg-green-100">2</div>
+            <div class="dice-face face-3 bg-gray-100">6</div>
+            <div class="dice-face face-4 bg-red-100">4</div>
+            <div class="dice-face face-5 bg-blue-100">1</div>
+            <div class="dice-face face-6 bg-purple-100">5</div>
+          </div>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">上面→背面、正面→上面、底面→正面、背面→底面</p>
+      </div>
+
+      <!-- South Roll -->
+      <div class="mb-6">
+        <h3 class="text-lg font-bold text-gray-600 mb-3">南へ回転 (S): 奥に転がす</h3>
+        <div class="movement-container">
+          <div class="dice-grid">
+            <div class="dice-face face-1 bg-blue-100">1</div>
+            <div class="dice-face face-2 bg-green-100">2</div>
+            <div class="dice-face face-3 bg-yellow-100">3</div>
+            <div class="dice-face face-4 bg-red-100">4</div>
+            <div class="dice-face face-5 bg-purple-100">5</div>
+            <div class="dice-face face-6 bg-gray-100">6</div>
+          </div>
+          <div class="text-2xl">→</div>
+          <div class="dice-grid">
+            <div class="dice-face face-1 bg-purple-100">5</div>
+            <div class="dice-face face-2 bg-green-100">2</div>
+            <div class="dice-face face-3 bg-blue-100">1</div>
+            <div class="dice-face face-4 bg-red-100">4</div>
+            <div class="dice-face face-5 bg-gray-100">6</div>
+            <div class="dice-face face-6 bg-yellow-100">3</div>
+          </div>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">上面→正面、正面→底面、底面→背面、背面→上面</p>
+      </div>
+
+      <!-- East Roll -->
+      <div class="mb-6">
+        <h3 class="text-lg font-bold text-gray-600 mb-3">東へ回転 (E): 右に転がす</h3>
+        <div class="movement-container">
+          <div class="dice-grid">
+            <div class="dice-face face-1 bg-blue-100">1</div>
+            <div class="dice-face face-2 bg-green-100">2</div>
+            <div class="dice-face face-3 bg-yellow-100">3</div>
+            <div class="dice-face face-4 bg-red-100">4</div>
+            <div class="dice-face face-5 bg-purple-100">5</div>
+            <div class="dice-face face-6 bg-gray-100">6</div>
+          </div>
+          <div class="text-2xl">→</div>
+          <div class="dice-grid">
+            <div class="dice-face face-1 bg-green-100">2</div>
+            <div class="dice-face face-2 bg-gray-100">6</div>
+            <div class="dice-face face-3 bg-yellow-100">3</div>
+            <div class="dice-face face-4 bg-blue-100">1</div>
+            <div class="dice-face face-5 bg-purple-100">5</div>
+            <div class="dice-face face-6 bg-red-100">4</div>
+          </div>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">上面→右面、右面→底面、底面→左面、左面→上面</p>
+      </div>
+
+      <!-- West Roll -->
+      <div class="mb-6">
+        <h3 class="text-lg font-bold text-gray-600 mb-3">西へ回転 (W): 左に転がす</h3>
+        <div class="movement-container">
+          <div class="dice-grid">
+            <div class="dice-face face-1 bg-blue-100">1</div>
+            <div class="dice-face face-2 bg-green-100">2</div>
+            <div class="dice-face face-3 bg-yellow-100">3</div>
+            <div class="dice-face face-4 bg-red-100">4</div>
+            <div class="dice-face face-5 bg-purple-100">5</div>
+            <div class="dice-face face-6 bg-gray-100">6</div>
+          </div>
+          <div class="text-2xl">→</div>
+          <div class="dice-grid">
+            <div class="dice-face face-1 bg-red-100">4</div>
+            <div class="dice-face face-2 bg-blue-100">1</div>
+            <div class="dice-face face-3 bg-yellow-100">3</div>
+            <div class="dice-face face-4 bg-gray-100">6</div>
+            <div class="dice-face face-5 bg-purple-100">5</div>
+            <div class="dice-face face-6 bg-green-100">2</div>
+          </div>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">上面→左面、左面→底面、底面→右面、右面→上面</p>
+      </div>
+    </section>
+
+    <!-- Section 3: Understanding the Logic -->
+    <section>
+      <h2 class="text-xl font-bold text-gray-700 mb-4">3. プログラムのロジック</h2>
+      <p class="mb-4">
+        プログラムは以下の手順で動作します：
+      </p>
+      <ol class="list-decimal list-inside mb-6 space-y-2">
+        <li>初期のサイコロの状態（6つの面の数字）を読み込む</li>
+        <li>回転命令の列を読み込む</li>
+        <li>各命令に従って、サイコロの面を適切に回転させる</li>
+        <li>最終的な上面の数字を出力する</li>
+      </ol>
+      <div class="bg-gray-100 p-4 rounded-lg">
+        <h4 class="font-bold mb-2">重要なポイント:</h4>
+        <ul class="list-disc list-inside space-y-1">
+          <li>各回転操作は、4つの面の数字を循環的に移動させる</li>
+          <li>回転軸に垂直でない面（例：E/W回転時の正面・背面）は変化しない</li>
+          <li>一時変数を使って、同時に複数の面を更新する</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- Visual 2: サイコロII -->
+  <div id="visual2" class="section-divider max-w-5xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg mb-8">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 border-b pb-2">サイコロII (ITP1_11_B) サイコロの状態探索</h1>
+    <p class="text-gray-700 mb-6">
+      今回のプログラムは、指定された「上面」と「正面」の整数を持つ状態を探し出し、その時の「右面」の整数を答えるものです。その中心的なロジックである <code
+        class="inline-code">find_right_side</code> メソッドの仕組みを解説します。
+    </p>
+
+    <!-- Section 1: Dice Representation -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">1. サイコロの表現方法</h2>
+      <p class="mb-4">
+        このプログラムでは、サイコロの各面を <code class="inline-code">self.top</code>, <code class="inline-code">self.front</code>
+        のような個別の変数（属性）として保持します。これにより、どの変数がどの面に対応するかが名前から直感的に分かります。
+      </p>
+      <div class="diagram-container">
+        <div>
+          <h3 class="font-bold text-center mb-2">初期化時の対応</h3>
+          <p class="text-center text-sm mb-2">入力された6つの数字が、以下の変数に格納されます。</p>
+          <div class="w-full flex justify-center">
+            <svg width="180" height="150" viewBox="0 0 100 100">
+              <path d="M20 30 L50 10 L80 30 L80 70 L50 90 L20 70 Z" fill="#e9e9e9" stroke="#555" stroke-width="1" />
+              <path d="M50 10 L50 50" fill="none" stroke="#555" stroke-width="1" />
+              <path d="M20 70 L50 50" fill="none" stroke="#555" stroke-width="1" />
+              <path d="M80 70 L50 50" fill="none" stroke="#555" stroke-width="1" />
+              <text x="45" y="25" font-size="7" text-anchor="middle">上面 (top)</text>
+              <text x="50" y="70" font-size="7" text-anchor="middle">正面 (front)</text>
+              <text x="72" y="55" font-size="7" text-anchor="middle" transform="rotate(30 70,55)">右面 (right)</text>
+              <text x="28" y="55" font-size="7" text-anchor="middle" transform="rotate(-30 30,55)">左面 (left)</text>
+              <text x="50" y="45" font-size="7" text-anchor="middle">(背面:back)</text>
+              <text x="50" y="98" font-size="7" text-anchor="middle">(底面:bottom)</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Search Strategy -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">2. 目的の状態を見つける戦略</h2>
+      <p class="mb-6">
+        このプログラムの核心は、どうやって目的の「上面」と「正面」の組み合わせを見つけるかです。答えは「<b>考えられる全ての向きを、しらみつぶしに試す</b>」です。サイコロの向きは全部で24通りあり、プログラムはこれら全ての向きを順番に作り出し、条件に合うかチェックしています。
+      </p>
+      <div class="flex flex-col items-center justify-center gap-2 p-4 bg-gray-50 rounded-lg">
+        <div class="flow-chart-item"><b>スタート</b><br>（初期状態のサイコロ）</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-chart-item"><b>① 回転させる</b><br>（まだ試していない向きにする）</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-chart-item bg-blue-50 border-blue-400"><b>② 確認する</b><br>上面と正面は合っているか？</div>
+        <div class="flex w-full justify-around">
+          <div class="flex flex-col items-center">
+            <div class="flow-arrow">↙</div>
+            <div class="flow-chart-item bg-red-50 border-red-400"><b>No</b><br>（まだ試していない向きがある）</div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="flow-arrow">↘</div>
+            <div class="flow-chart-item bg-green-50 border-green-400"><b>Yes</b><br>（一致した！）</div>
+          </div>
+        </div>
+        <div class="flex w-full">
+          <div class="w-1/2 text-center flow-arrow relative -top-4">↑</div>
+          <div class="w-1/2 text-center flow-arrow relative -top-4">↓</div>
+        </div>
+        <div class="flex w-full">
+          <div class="w-1/2 text-center text-sm text-gray-600">①に戻る</div>
+          <div class="w-1/2 text-center flow-chart-item"><b>ゴール</b><br>その時の右面の値を返す</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Code Explanation -->
+    <section>
+      <h2 class="text-xl font-bold text-gray-700 mb-4">3. <code class="inline-code">find_right_side</code> メソッドの解説</h2>
+      <p class="mb-4">
+        この「しらみつぶし作戦」を実装しているのが <code class="inline-code">find_right_side</code>
+        メソッドです。ネストしたループ（繰り返し処理）を使い、サイコロを体系的に回転させることで、全24通りの向きを網羅しています。
+      </p>
+      <div class="shadow-lg rounded-lg">
+        <div class="bg-gray-700 rounded-t-lg px-4 py-2 flex items-center">
+          <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+        </div>
+        <pre class="bg-gray-900 text-gray-200 p-4 rounded-b-lg text-sm font-mono overflow-x-auto"><code>def find_right_side(self, target_top, target_front):
+    <span class="text-green-400"># あらゆる向きを試すため、様々な方向に回転させる</span>
+    
+    <span class="text-green-400"># 6つの面がそれぞれ上面になるパターンを試す</span>
+    for _ in range(6):
+        <span class="text-green-400"># 上面を固定したまま、側面を4回回転させて正面を試す</span>
+        for _ in range(4):
+            if self.top == target_top and self.front == target_front:
+                return self.right
+            self.roll_E() <span class="text-green-400"># 右スピン（上面と底面は変わらない）</span>
+        
+        <span class="text-green-400"># 次の面を上面に持ってくるための回転パターン</span>
+        if _ % 2 == 0:
+            self.roll_N()
+        else:
+            self.roll_E()
+
+</code></pre>
+      </div>
+      <p class="mt-4 text-sm text-gray-600">※注：上記のコードは実際のプログラムのループ構造を分かりやすく解説したもので、完全に同一ではありません。ポイントは、<code
+          class="inline-code">roll_N()</code>（縦回転）と<code
+          class="inline-code">roll_E()</code>（横回転）を組み合わせることで、全ての面を上面や正面として試している点です。</p>
+    </section>
+
+    <!-- Section 4: Summary -->
+    <section class="mt-8 pt-4 border-t">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">まとめ</h2>
+      <p class="text-gray-700">
+        このプログラムの重要な点は、決まった命令通りに動くだけでなく、「状態」を探すという考え方です。コンピュータは高速に計算できるため、今回のように考えられるパターンを全て試す、という解決策が非常に有効な場合があります。この「全探索」という考え方は、プログラミングにおける基本的な問題解決手法の一つです。
+      </p>
+    </section>
+  </div>
+
+  <!-- Visual 3: サイコロIII -->
+  <div id="visual3" class="section-divider max-w-5xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg mb-8">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 border-b pb-2">２つのサイコロの同一性判定 (ITP1_11_C ビジュアル解説)</h1>
+    <p class="text-gray-700 mb-6">
+      今回のプログラムは、２つのサイコロが回転によって同じ向きにできるか、つまり「同一」であるかを判定します。その中心的なロジックである <code class="inline-code">are_same_dice</code>
+      関数の仕組みを解説します。
+    </p>
+
+    <!-- Section 1: What are "Same Dice"? -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">1. 「同一のサイコロ」とは？</h2>
+      <p class="mb-4">
+        プログラムにおける「同一のサイコロ」とは、一方のサイコロを回転させることで、もう一方のサイコロと全ての面の数字がぴったり一致する状態にできるものを指します。初期状態での向きが違っていても、回転させて同じになれば「同一」です。
+      </p>
+      <div class="diagram-container">
+        <div class="flex flex-col md:flex-row items-center gap-4">
+          <!-- Dice 1 -->
+          <div class="text-center">
+            <h3 class="font-bold">サイコロA</h3>
+            <svg width="150" height="150" viewBox="0 0 100 100">
+              <path d="M20 30 L50 10 L80 30 L80 70 L50 90 L20 70 Z" fill="#e0f2fe" stroke="#0284c7" stroke-width="1" />
+              <path d="M50 10 L50 50" fill="none" stroke="#0284c7" stroke-width="1" />
+              <path d="M20 70 L50 50" fill="none" stroke="#0284c7" stroke-width="1" />
+              <path d="M80 70 L50 50" fill="none" stroke="#0284c7" stroke-width="1" />
+              <text x="48" y="25" font-size="10" font-weight="bold" text-anchor="middle">1</text>
+              <text x="50" y="72" font-size="10" font-weight="bold" text-anchor="middle">2</text>
+              <text x="75" y="55" font-size="10" font-weight="bold" text-anchor="middle"
+                transform="rotate(30 70,55)">3</text>
+            </svg>
+          </div>
+          <!-- Dice 2 -->
+          <div class="text-center">
+            <h3 class="font-bold">サイコロB</h3>
+            <svg width="150" height="150" viewBox="0 0 100 100">
+              <path d="M20 30 L50 10 L80 30 L80 70 L50 90 L20 70 Z" fill="#e0f2fe" stroke="#0284c7" stroke-width="1" />
+              <path d="M50 10 L50 50" fill="none" stroke="#0284c7" stroke-width="1" />
+              <path d="M20 70 L50 50" fill="none" stroke="#0284c7" stroke-width="1" />
+              <path d="M80 70 L50 50" fill="none" stroke="#0284c7" stroke-width="1" />
+              <text x="48" y="25" font-size="10" font-weight="bold" text-anchor="middle">2</text>
+              <text x="50" y="72" font-size="10" font-weight="bold" text-anchor="middle">6</text>
+              <text x="75" y="55" font-size="10" font-weight="bold" text-anchor="middle"
+                transform="rotate(30 70,55)">3</text>
+            </svg>
+          </div>
+        </div>
+        <p class="mt-4 text-center">この２つのサイコロは、初期状態では向きが異なります。しかし、サイコロBを回転させてサイコロAと同じ向き（上面1, 正面2, 右面3）にできるなら、これらは「同一」です。
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 2: Search Strategy -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">2. 同一性を判定する戦略</h2>
+      <p class="mb-6">
+        ここでも「<b>しらみつぶし作戦（全探索）</b>」が活躍します。一方のサイコロ（サイコロA）を基準として固定し、もう一方（サイコロB）を考えられる全ての向き（24通り）に回転させます。そして、その都度、AとBの向きが完全に一致するかどうかを確認します。一度でも一致すれば、その時点で「同一」と判定できます。
+      </p>
+      <div class="flex flex-col items-center justify-center gap-2 p-4 bg-gray-50 rounded-lg">
+        <div class="flow-chart-item"><b>スタート</b><br>（サイコロAとサイコロB）</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-chart-item"><b>① サイコロAの向きを固定</b></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-chart-item"><b>② サイコロBを回転させる</b><br>（まだ試していない向きにする）</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-chart-item bg-blue-50 border-blue-400"><b>③ 全ての面を確認</b><br>AとBの向きは完全に一致したか？</div>
+        <div class="flex w-full justify-around mt-4">
+          <div class="flex flex-col items-center">
+            <div class="flow-arrow">↙</div>
+            <div class="flow-chart-item bg-red-50 border-red-400"><b>No</b><br>（まだ試していない向きがある）<br>②に戻る</div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="flow-arrow">↘</div>
+            <div class="flow-chart-item bg-green-50 border-green-400"><b>Yes</b><br><b>ゴール！</b><br>「同一である」と判定</div>
+          </div>
+        </div>
+        <p class="mt-8 text-center">もし、サイコロBの全ての向きを試しても一度も一致しなかった場合、その時はじめて「同一ではない」と結論できます。</p>
+      </div>
+    </section>
+
+    <!-- Section 3: Code Explanation -->
+    <section>
+      <h2 class="text-xl font-bold text-gray-700 mb-4">3. <code class="inline-code">are_same_dice</code> 関数の解説</h2>
+      <p class="mb-4">
+        この全探索を実装しているのが <code class="inline-code">are_same_dice</code> 関数です。前回の <code
+          class="inline-code">find_right_side</code> と非常によく似たループ構造でサイコロBを全24通りに回転させ、各状態でサイコロAと全ての面が一致するかを比較しています。
+      </p>
+      <div class="shadow-lg rounded-lg">
+        <div class="bg-gray-700 rounded-t-lg px-4 py-2 flex items-center">
+          <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+        </div>
+        <pre class="bg-gray-900 text-gray-200 p-4 rounded-b-lg text-sm font-mono overflow-x-auto"><code>def are_same_dice(dice1, dice2):
+    <span class="text-green-400"># dice1 を基準に、dice2 をあらゆる向きに回転させて比較する</span>
+    
+    for _ in range(4):
+        for _ in range(2):
+            for _ in range(4):
+                <span class="text-green-400"># 現在の dice2 の向きが dice1 と完全に一致するかチェック</span>
+                if (dice1.top    == dice2.top and
+                    dice1.front  == dice2.front and
+                    dice1.right  == dice2.right and
+                    dice1.left   == dice2.left and
+                    dice1.back   == dice2.back and
+                    dice1.bottom == dice2.bottom):
+                    return True <span class="text-green-400"># 一致したら、その時点で True を返す</span>
+                
+                dice2.roll_E() <span class="text-green-400"># dice2 を横に回転</span>
+            
+            dice2.roll_N() <span class="text-green-400"># dice2 を縦に回転</span>
+            dice2.roll_N()
+        
+        dice2.roll_N()
+        dice2.roll_E()
+
+    <span class="text-green-400"># 全ての向きを試しても一致しなかった場合</span>
+    return False
+</code></pre>
+      </div>
+    </section>
+
+    <!-- Section 4: Summary -->
+    <section class="mt-8 pt-4 border-t">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">まとめ</h2>
+      <p class="text-gray-700">
+        「サイコロII」では、全探索を使って「特定の一つの状態」を探しました。今回は、全探索を使って「２つのオブジェクトが本質的に同じものか」を判定しました。このように、全探索は様々な問題に応用できる強力なテクニックです。基準となるものを一つ固定し、もう一方を動かして比較する、という考え方は特に重要なので、ぜひ覚えておきましょう。
+      </p>
+    </section>
+  </div>
+
+  <!-- Visual 4: サイコロIV -->
+  <div id="visual4" class="section-divider max-w-5xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg mb-8">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 border-b pb-2">サイコロIV (ITP1_11_D) 複数のサイコロの同一性判定</h1>
+    <p class="text-gray-700 mb-6">
+      今回のプログラムは、与えられた複数のサイコロが「全て異なる」かどうかを判定します。サイコロIIIで作成した「2つのサイコロの同一性判定」のロジックを応用して、この問題を解決します。
+    </p>
+
+    <!-- Section 1: The Problem -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">1. 問題の核心：総当たり比較</h2>
+      <p class="mb-4">
+        「n個のサイコロが全て異なる」ことを証明するには、どうすればよいでしょうか？答えは、「考えられる全てのペアを比較し、一つも同じものがないことを確認する」です。これを「総当たり比較」や「ペアワイズ比較」と呼びます。
+      </p>
+      <div class="diagram-container">
+        <div class="text-center">
+          <h3 class="font-bold">例えば、4つのサイコロがある場合...</h3>
+          <div class="flex justify-center gap-4 my-4">
+            <svg width="80" height="80" viewBox="0 0 100 100">
+              <path d="M20 30 L50 10 L80 30 L80 70 L50 90 L20 70 Z" fill="#e0f2fe" stroke="#0284c7"
+                stroke-width="1.5" /><text x="50" y="55" font-size="20" font-weight="bold" text-anchor="middle">A</text>
+            </svg>
+            <svg width="80" height="80" viewBox="0 0 100 100">
+              <path d="M20 30 L50 10 L80 30 L80 70 L50 90 L20 70 Z" fill="#dcfce7" stroke="#16a34a"
+                stroke-width="1.5" /><text x="50" y="55" font-size="20" font-weight="bold" text-anchor="middle">B</text>
+            </svg>
+            <svg width="80" height="80" viewBox="0 0 100 100">
+              <path d="M20 30 L50 10 L80 30 L80 70 L50 90 L20 70 Z" fill="#fee2e2" stroke="#dc2626"
+                stroke-width="1.5" /><text x="50" y="55" font-size="20" font-weight="bold" text-anchor="middle">C</text>
+            </svg>
+            <svg width="80" height="80" viewBox="0 0 100 100">
+              <path d="M20 30 L50 10 L80 30 L80 70 L50 90 L20 70 Z" fill="#fef9c3" stroke="#ca8a04"
+                stroke-width="1.5" /><text x="50" y="55" font-size="20" font-weight="bold" text-anchor="middle">D</text>
+            </svg>
+          </div>
+          <p>以下の全ての組み合わせを比較する必要があります。</p>
+          <ul class="list-disc list-inside text-left mt-2 inline-block">
+            <li>A と B</li>
+            <li>A と C</li>
+            <li>A と D</li>
+            <li>B と C</li>
+            <li>B と D</li>
+            <li>C と D</li>
+          </ul>
+        </div>
+        <p class="mt-4 text-center font-bold">この比較の途中で、一つでも「同一」のペアが見つかった瞬間に、全体の答えは「No (全て異なるとは言えない)」と確定します。</p>
+      </div>
+    </section>
+
+    <!-- Section 2: Search Strategy -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">2. 判定の戦略フロー</h2>
+      <p class="mb-6">
+        この総当たり比較をプログラムで実現するための流れは以下のようになります。
+      </p>
+      <div class="flex flex-col items-center justify-center gap-2 p-4 bg-gray-50 rounded-lg">
+        <div class="flow-chart-item"><b>スタート</b><br>（n個のサイコロのリスト）</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-chart-item"><b>① 比較するペアを選ぶ</b><br>（例: 1番目と2番目）</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-chart-item bg-blue-50 border-blue-400"><b>② 2つのサイコロが同一か判定</b><br>（サイコロIIIのロジックを使用）</div>
+        <div class="flex w-full justify-around mt-4">
+          <div class="flex flex-col items-center">
+            <div class="flow-arrow">↙</div>
+            <div class="flow-chart-item bg-green-50 border-green-400"><b>同一ではない</b><br>（次のペアを試しに①へ）</div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="flow-arrow">↘</div>
+            <div class="flow-chart-item bg-red-50 border-red-400"><b>同一である</b><br><b>ゴール！</b><br>「No」と出力して終了</div>
+          </div>
+        </div>
+        <p class="mt-8 text-center">もし、全てのペアを比較し終えても、一度も「同一である」とならなかった場合、最後に「Yes」と出力します。</p>
+      </div>
+    </section>
+
+    <!-- Section 3: Code Explanation -->
+    <section>
+      <h2 class="text-xl font-bold text-gray-700 mb-4">3. <code class="inline-code">main</code> 関数の解説</h2>
+      <p class="mb-4">
+        この総当たり比較を実装しているのが、<code class="inline-code">main</code>関数内の二重ループ（ネストしたfor文）です。
+      </p>
+      <div class="shadow-lg rounded-lg">
+        <div class="bg-gray-700 rounded-t-lg px-4 py-2 flex items-center">
+          <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+        </div>
+        <pre class="bg-gray-900 text-gray-200 p-4 rounded-b-lg text-sm font-mono overflow-x-auto"><code>def main():
+    n = int(input())
+    dices = []
+    for _ in range(n):
+        faces = list(map(int, input().split()))
+        dices.append(Dice(faces))
+
+    <span class="text-green-400"># 全てのサイコロのペアについて、同一かどうかを判定</span>
+    for i in range(n):
+        for j in range(i + 1, n):
+            <span class="text-green-400"># dices[i] と dices[j] を比較する</span>
+            if are_same_dice(dices[i], dices[j]):
+                <span class="text-green-400"># もし同一のペアが見つかったら...</span>
+                print("No")
+                return <span class="text-green-400"># その場でプログラムを終了</span>
+
+    <span class="text-green-400"># ループが最後まで終わった = 同一のペアは無かった</span>
+    print("Yes")
+</code></pre>
+      </div>
+      <p class="mt-4 text-sm text-gray-600"><b>ポイント：</b> 2つ目のループが <code class="inline-code">range(i + 1, n)</code>
+        となっているのが重要です。これにより、「AとB」を比較した後に、重複して「BとA」を比較することを防ぎ、効率的に全てのペアを網羅しています。</p>
+    </section>
+
+    <!-- Section 4: Summary -->
+    <section class="mt-8 pt-4 border-t">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">まとめ</h2>
+      <p class="text-gray-700">
+        これまでのサイコロシリーズで、基本的な部品となる「回転ロジック」や「比較ロジック」を一つずつ作ってきました。そして今回の課題では、それらの部品を組み合わせて、より複雑な問題（複数のアイテムのユニークチェック）を解決しました。
+        このように、<b class="text-gray-800">問題を小さな部品に分割して考え、それらを組み合わせて全体のシステムを構築する</b>のは、プログラミングにおける非常に基本的かつ強力なアプローチです。
+      </p>
+    </section>
+  </div>
+
+  <!-- Final Summary Section -->
+  <div class="max-w-5xl mx-auto bg-gradient-to-r from-blue-50 to-indigo-50 p-6 md:p-8 rounded-2xl shadow-lg mb-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">サイコロシリーズ全体のまとめ</h2>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <h3 class="text-lg font-bold text-gray-700 mb-3">学習した技術</h3>
+        <ul class="space-y-2">
+          <li class="flex items-start">
+            <span class="text-blue-500 mr-2">•</span>
+            <span><strong>基本操作：</strong>サイコロの回転メカニズム</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-green-500 mr-2">•</span>
+            <span><strong>全探索：</strong>しらみつぶし戦略による状態検索</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-red-500 mr-2">•</span>
+            <span><strong>比較判定：</strong>オブジェクトの同一性チェック</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-purple-500 mr-2">•</span>
+            <span><strong>組み合わせ：</strong>複数要素の総当たり比較</span>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-gray-700 mb-3">プログラミングの原則</h3>
+        <ul class="space-y-2">
+          <li class="flex items-start">
+            <span class="text-yellow-500 mr-2">•</span>
+            <span><strong>段階的構築：</strong>小さな部品から大きなシステムへ</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-indigo-500 mr-2">•</span>
+            <span><strong>再利用性：</strong>一度作った機能を別の場面で活用</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-pink-500 mr-2">•</span>
+            <span><strong>効率性：</strong>重複を避けた賢いアルゴリズム設計</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-teal-500 mr-2">•</span>
+            <span><strong>可読性：</strong>分かりやすい構造とロジック</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-6 p-4 bg-white rounded-lg border-l-4 border-blue-500">
+      <p class="text-gray-700 text-center">
+        <strong>重要なポイント：</strong>
+        複雑な問題も、基本的な操作と論理的な思考の組み合わせで解決できることを学習しました。
+        この経験は、より高度なプログラミング課題に取り組む際の強固な基盤となります。
+      </p>
+    </div>
+  </div>
+
+  <!-- JavaScript for smooth scrolling -->
+  <script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Highlight current section in navigation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('bg-blue-500', 'text-white');
+            link.classList.add('bg-gray-100', 'text-gray-700');
+          });
+          const activeLink = document.querySelector(`a[href="#${id}"]`);
+          if (activeLink) {
+            activeLink.classList.remove('bg-gray-100', 'text-gray-700');
+            activeLink.classList.add('bg-blue-500', 'text-white');
+          }
+        }
+      });
+    }, { rootMargin: '-20% 0px -80% 0px' });
+
+    document.querySelectorAll('[id^="visual"]').forEach(section => {
+      observer.observe(section);
+    });
+  </script>
+
+</body>
+
+</html>
