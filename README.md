@@ -2,6 +2,10 @@
 
 Aizu Online Judge (AOJ)の提出記録を管理するツール群 - 提出プログラムのダウンロード、成績の追跡、Excel形式でのレポート出力に対応
 
+## 開発（AIエージェント）向け
+
+開発用AIエージェントに渡す前提情報（目的、主要スクリプト、データ仕様、運用上の注意）を [AGENTS.md](AGENTS.md) にまとめています。
+
 ## AOJについて
 
 [Aizu Online Judge](https://onlinejudge.u-aizu.ac.jp/courses/list)は会津大学が提供するプログラミング学習システムです。課題の提出と自動採点が可能で、プログラミング教育に広く活用されています。
@@ -87,7 +91,7 @@ python3 export_excel.py -i user.csv -p prob.csv
 - タブ区切り形式で出力
 - 1行のフォーマット：
   `学籍番号  氏名  問題1スコア  問題1提出日時  問題2スコア ...`
-- 日時形式：`YYYY年MM月DD日HH時MM分SS秒`
+- 日時形式：`YYYY/MM/DD HH:MM:SS`（例：`2025/04/22 14:23:45`）
 - Excelで開くと自動的に表形式で表示
 
 ### 4. ランキング集計（generate_rankings.py）
@@ -103,6 +107,11 @@ python3 generate_rankings.py
 - 問題ごとのランキング：`rankings/ITP1_1_A_ranking_YYYYMMDD.tsv`など
   - 提出日時順にランキング
 - デバッグログ：`rankings/debug_log_total_ranking.txt`
+- `rankings/` ディレクトリが無い場合は自動作成
+
+## テスト
+
+テスト関連ファイルは `test_data/` に配置しています（`*_test.py` とテスト用CSV）。
 
 ## ファイル構成
 
@@ -124,6 +133,9 @@ python3 generate_rankings.py
   - `user.csv` は `.gitignore` で管理対象外
   - バックアップファイル（`user_*.csv`）も同様
   - サンプルファイル（`users_sample.csv`）使用時は実データを削除
+
+- 生成物の管理
+  - `downloads/`、`rankings/`、`scores_*.tsv` などは実行で生成されます（既定では `.gitignore` によりコミット対象外）
 
 - AOJの利用規約に従う
   - [コース一覧](https://onlinejudge.u-aizu.ac.jp/courses/list)から適切な問題を選択
