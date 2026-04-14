@@ -113,6 +113,19 @@ python3 generate_rankings.py
 
 テスト関連ファイルは `test_data/` に配置しています（`*_test.py` とテスト用CSV）。
 
+## Google Spreadsheet + GAS 版
+
+Google Spreadsheet + Google Apps Script で運用する実装を [`gas/`](gas/) に追加しています。
+
+- 主データは `Students` / `Problems` / `BestSubmissions` の正規化テーブル
+- `Dashboard` で Excel 向け一覧相当の横持ち表示を再構築
+- `Rankings` で総合順位と問題別順位を集計
+- `AOJ Sync` で AOJ API をバッチ取得
+- `Export TSV` / `Download Accepted Code` は Drive へ出力
+- `appsscript.json` の配置方法と `clasp` を使った同期手順も [gas/README.md](gas/README.md) に記載
+
+セットアップと運用手順は [gas/README.md](gas/README.md) を参照してください。
+
 ## ファイル構成
 
 - `user.csv`：学生情報と提出記録（※個人情報を含むため要管理）
@@ -126,6 +139,7 @@ python3 generate_rankings.py
 - `export_excel.py`：Excel用レポート出力
 - `generate_rankings.py`：ランキング集計とTSV出力
 - `users_sample.csv`：user.csvのサンプル
+- `gas/`：Google Spreadsheet + Google Apps Script 版の実装
 
 ## 利用上の注意
 
